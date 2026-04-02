@@ -149,8 +149,27 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Acces rapid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10 animate-fade-in delay-2">
+          <a href="/dashboard/banks" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+            <p className="text-4xl mb-3">🏦</p>
+            <p className="font-bold text-gray-900 mb-1">Bănci</p>
+            <p className="text-sm text-gray-600">Gestionează băncile tale</p>
+          </a>
+          <a href="/dashboard/categories" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+            <p className="text-4xl mb-3">🏷️</p>
+            <p className="font-bold text-gray-900 mb-1">Categorii</p>
+            <p className="text-sm text-gray-600">Categorii venituri și cheltuieli</p>
+          </a>
+          <a href="/dashboard/currencies" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+            <p className="text-4xl mb-3">💱</p>
+            <p className="font-bold text-gray-900 mb-1">Valute</p>
+            <p className="text-sm text-gray-600">Administrează valutele</p>
+          </a>
+        </div>
+
         {/* Placeholder tranzacții */}
-        <div className="glass rounded-2xl p-8 animate-fade-in delay-2 text-center">
+        <div className="glass rounded-2xl p-8 animate-fade-in delay-3 text-center">
           <p className="text-4xl mb-4">📂</p>
           <p className="text-gray-700 font-semibold mb-1">Nicio tranzacție încă</p>
           <p className="text-gray-500 text-sm">Importă un extras bancar pentru a vedea datele tale financiare.</p>
