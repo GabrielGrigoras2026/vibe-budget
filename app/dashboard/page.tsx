@@ -150,7 +150,17 @@ export default function DashboardPage() {
         </div>
 
         {/* Acces rapid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10 animate-fade-in delay-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mb-10 animate-fade-in delay-2">
+          <a href="/dashboard/transactions" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+            <p className="text-4xl mb-3">💸</p>
+            <p className="font-bold text-gray-900 mb-1">Tranzacții</p>
+            <p className="text-sm text-gray-600">Lista completă</p>
+          </a>
+          <a href="/dashboard/upload" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+            <p className="text-4xl mb-3">📤</p>
+            <p className="font-bold text-gray-900 mb-1">Upload</p>
+            <p className="text-sm text-gray-600">Importă extras bancar</p>
+          </a>
           <a href="/dashboard/banks" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
             <p className="text-4xl mb-3">🏦</p>
             <p className="font-bold text-gray-900 mb-1">Bănci</p>
