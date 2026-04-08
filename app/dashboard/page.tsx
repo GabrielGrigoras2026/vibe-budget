@@ -13,43 +13,75 @@ interface Summary {
   sold: number;
 }
 
+interface RecentTransaction {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  currency: string;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [summary, setSummary] = useState<Summary>({ venituri: 0, cheltuieli: 0, sold: 0 });
   const [loadingSummary, setLoadingSummary] = useState(true);
+  const [recentTransactions, setRecentTransactions] = useState<RecentTransaction[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return { month: now.getMonth() + 1, year: now.getFullYear() };
+  });
+
+  const now = new Date();
+  const isCurrentMonth = selectedMonth.month === now.getMonth() + 1 && selectedMonth.year === now.getFullYear();
+
+  const goToPrevMonth = () => {
+    setSelectedMonth((prev) => {
+      if (prev.month === 1) return { month: 12, year: prev.year - 1 };
+      return { month: prev.month - 1, year: prev.year };
+    });
+  };
+
+  const goToNextMonth = () => {
+    setSelectedMonth((prev) => {
+      if (prev.month === 12) return { month: 1, year: prev.year + 1 };
+      return { month: prev.month + 1, year: prev.year };
+    });
+  };
 
   useEffect(() => {
     if (!user) return;
     fetchSummary();
-  }, [user]);
+  }, [user, selectedMonth]);
 
   const fetchSummary = async () => {
+    setLoadingSummary(true);
     try {
       const supabase = createClient();
-      const now = new Date();
-      const firstDay = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
-      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      const lastDayStr = `${lastDay.getFullYear()}-${String(lastDay.getMonth() + 1).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
+      const firstDay = `${selectedMonth.year}-${String(selectedMonth.month).padStart(2, "0")}-01`;
+      const lastDayDate = new Date(selectedMonth.year, selectedMonth.month, 0);
+      const lastDayStr = `${lastDayDate.getFullYear()}-${String(lastDayDate.getMonth() + 1).padStart(2, "0")}-${String(lastDayDate.getDate()).padStart(2, "0")}`;
 
       const { data } = await supabase
         .from("transactions")
-        .select("amount")
+        .select("id, date, description, amount, currency")
         .gte("date", firstDay)
-        .lte("date", lastDayStr);
+        .lte("date", lastDayStr)
+        .order("date", { ascending: false });
 
       if (!data) return;
 
       let venituri = 0;
       let cheltuieli = 0;
 
-      data.forEach((t: Pick<Transaction, "amount">) => {
+      data.forEach((t: RecentTransaction) => {
         const amount = Number(t.amount);
         if (amount > 0) venituri += amount;
         else cheltuieli += Math.abs(amount);
       });
 
       setSummary({ venituri, cheltuieli, sold: venituri - cheltuieli });
+      setRecentTransactions(data.slice(0, 5));
     } catch {
       // Fără date încă
     } finally {
@@ -70,7 +102,8 @@ export default function DashboardPage() {
   const formatRON = (amount: number) =>
     new Intl.NumberFormat("ro-RO", { minimumFractionDigits: 2 }).format(amount) + " RON";
 
-  const luna = new Date().toLocaleString("ro-RO", { month: "long", year: "numeric" });
+  const luna = new Date(selectedMonth.year, selectedMonth.month - 1, 1)
+    .toLocaleString("ro-RO", { month: "long", year: "numeric" });
 
   if (loading) {
     return (
@@ -111,6 +144,24 @@ export default function DashboardPage() {
             Bună ziua! 👋
           </h1>
           <p className="text-gray-700">Rezumat financiar — <span className="font-semibold capitalize">{luna}</span></p>
+        </div>
+
+        {/* Selector lună */}
+        <div className="flex items-center justify-center gap-4 mb-6 animate-fade-in delay-1">
+          <button
+            onClick={goToPrevMonth}
+            className="w-10 h-10 glass glass-hover rounded-xl font-bold text-gray-700 text-lg transition-all hover:scale-105"
+          >
+            ←
+          </button>
+          <span className="text-lg font-bold text-gray-900 capitalize min-w-[160px] text-center">{luna}</span>
+          <button
+            onClick={goToNextMonth}
+            disabled={isCurrentMonth}
+            className="w-10 h-10 glass glass-hover rounded-xl font-bold text-gray-700 text-lg transition-all hover:scale-105 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            →
+          </button>
         </div>
 
         {/* Cards rezumat */}
@@ -178,11 +229,39 @@ export default function DashboardPage() {
           </a>
         </div>
 
-        {/* Placeholder tranzacții */}
-        <div className="glass rounded-2xl p-8 animate-fade-in delay-3 text-center">
-          <p className="text-4xl mb-4">📂</p>
-          <p className="text-gray-700 font-semibold mb-1">Nicio tranzacție încă</p>
-          <p className="text-gray-500 text-sm">Importă un extras bancar pentru a vedea datele tale financiare.</p>
+        {/* Tranzacții recente */}
+        <div className="glass rounded-2xl overflow-hidden animate-fade-in delay-3">
+          <div className="px-6 py-4 border-b border-white/30 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">Tranzacții recente</h2>
+            <a href="/dashboard/transactions" className="text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors">
+              Vezi toate →
+            </a>
+          </div>
+          {recentTransactions.length === 0 ? (
+            <div className="p-8 text-center">
+              <p className="text-4xl mb-3">📂</p>
+              <p className="text-gray-700 font-semibold">Nicio tranzacție în {luna}</p>
+              <p className="text-gray-500 text-sm mt-1">Importă un extras bancar pentru a vedea datele tale financiare.</p>
+            </div>
+          ) : (
+            <table className="w-full">
+              <tbody>
+                {recentTransactions.map((tx) => {
+                  const [y, m, d] = tx.date.split("-");
+                  const amount = Number(tx.amount);
+                  return (
+                    <tr key={tx.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
+                      <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{`${d}.${m}.${y}`}</td>
+                      <td className="px-6 py-4 text-sm font-semibold text-gray-900 truncate max-w-[200px]">{tx.description}</td>
+                      <td className={`px-6 py-4 text-sm font-bold text-right whitespace-nowrap ${amount >= 0 ? "text-green-600" : "text-red-500"}`}>
+                        {amount >= 0 ? "+" : ""}{new Intl.NumberFormat("ro-RO", { minimumFractionDigits: 2 }).format(amount)} {tx.currency}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

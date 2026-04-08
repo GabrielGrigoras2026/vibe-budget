@@ -22,6 +22,9 @@ export default function TransactionsPage() {
   const [bankFilter, setBankFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
 
+  // Modal descriere
+  const [descriptionModal, setDescriptionModal] = useState<string | null>(null);
+
   // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [formDate, setFormDate] = useState(new Date().toISOString().split("T")[0]);
@@ -146,6 +149,29 @@ export default function TransactionsPage() {
     }
   };
 
+  const handleDeletePeriod = async () => {
+    if (!dateFrom || !dateTo) {
+      toast.error("Selectează perioada De la și Până la înainte de ștergere");
+      return;
+    }
+    const count = transactions.length;
+    if (!window.confirm(`Ștergi ${count} tranzacții din perioada ${formatDate(dateFrom)} — ${formatDate(dateTo)}?`)) return;
+
+    try {
+      const res = await fetch("/api/transactions/bulk", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dateFrom, dateTo }),
+      });
+      const data = await res.json() as { deletedCount?: number; error?: string };
+      if (!res.ok) { toast.error(data.error ?? "Eroare la ștergere"); return; }
+      toast.success(`${data.deletedCount} tranzacții șterse!`);
+      fetchTransactions();
+    } catch {
+      toast.error("Eroare la ștergere");
+    }
+  };
+
   const handleDelete = async (tx: Transaction) => {
     if (!window.confirm(`Ștergi tranzacția "${tx.description}"?`)) return;
     try {
@@ -262,6 +288,14 @@ export default function TransactionsPage() {
                 className="px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
               />
             </div>
+            {dateFrom && dateTo && (
+              <button
+                onClick={handleDeletePeriod}
+                className="px-4 py-2 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105 whitespace-nowrap"
+              >
+                🗑️ Șterge perioada
+              </button>
+            )}
             <select
               value={bankFilter}
               onChange={(e) => setBankFilter(e.target.value)}
@@ -315,7 +349,11 @@ export default function TransactionsPage() {
                   return (
                     <tr key={tx.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
                       <td className="px-5 py-4 text-sm text-gray-700 whitespace-nowrap">{formatDate(tx.date)}</td>
-                      <td className="px-5 py-4 text-sm font-semibold text-gray-900 max-w-[200px] truncate">{tx.description}</td>
+                      <td
+                        className="px-5 py-4 text-sm font-semibold text-gray-900 max-w-[200px] truncate cursor-pointer hover:text-teal-600 transition-colors"
+                        onClick={() => setDescriptionModal(tx.description)}
+                        title="Click pentru detalii"
+                      >{tx.description}</td>
                       <td className="px-5 py-4">
                         {bank ? (
                           <div className="flex items-center gap-2">
@@ -355,6 +393,34 @@ export default function TransactionsPage() {
           )}
         </div>
       </div>
+
+      {/* Modal descriere completă */}
+      {descriptionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setDescriptionModal(null)} />
+          <div className="relative glass rounded-2xl p-8 w-full max-w-md shadow-2xl animate-fade-in">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Descriere tranzacție</h2>
+            <p className="text-gray-800 break-all mb-6 leading-relaxed">{descriptionModal}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(descriptionModal);
+                  toast.success("Copiat!");
+                }}
+                className="flex-1 py-2.5 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-200"
+              >
+                📋 Copiază
+              </button>
+              <button
+                onClick={() => setDescriptionModal(null)}
+                className="flex-1 py-2.5 bg-white/60 hover:bg-white/80 text-gray-700 font-semibold rounded-xl transition-all duration-200"
+              >
+                Închide
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       {modalOpen && (

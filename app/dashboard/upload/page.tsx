@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { Bank } from "@/lib/db/schema";
+import { parseCSV, parseExcel, ParsedTransaction } from "@/lib/utils/file-parser";
 
 export default function UploadPage() {
   const router = useRouter();
@@ -15,6 +16,9 @@ export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedBankId, setSelectedBankId] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  const [parsedTransactions, setParsedTransactions] = useState<ParsedTransaction[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{ totalImported: number; autoCategorized: number } | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -24,7 +28,7 @@ export default function UploadPage() {
       .catch(() => toast.error("Eroare la încărcarea băncilor"));
   }, [user]);
 
-  const handleFileChange = (file: File | null) => {
+  const handleFileChange = async (file: File | null) => {
     if (!file) return;
     const ext = file.name.split(".").pop()?.toLowerCase();
     if (!["csv", "xlsx", "xls"].includes(ext ?? "")) {
@@ -32,6 +36,23 @@ export default function UploadPage() {
       return;
     }
     setSelectedFile(file);
+    setParsedTransactions([]);
+
+    // Parsare fișier
+    let result;
+    if (ext === "csv") {
+      result = await parseCSV(file);
+    } else {
+      result = await parseExcel(file);
+    }
+
+    if (!result.success || result.transactions.length === 0) {
+      toast.error(result.error ?? "Nu s-au găsit tranzacții în fișier");
+      return;
+    }
+
+    setParsedTransactions(result.transactions);
+    toast.success(`${result.transactions.length} tranzacții găsite în fișier`);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -48,8 +69,49 @@ export default function UploadPage() {
     handleFileChange(file);
   };
 
-  const handleUpload = () => {
-    toast.info("Upload va fi funcțional în Săptămâna 5, Lecția 5.1");
+  const handleUpload = async () => {
+    if (!selectedBankId || parsedTransactions.length === 0) return;
+
+    setIsImporting(true);
+    try {
+      const body = parsedTransactions.map((tx) => ({
+        bankId: selectedBankId,
+        date: tx.date,
+        description: tx.description,
+        amount: tx.amount,
+        currency: tx.currency ?? "RON",
+        type: tx.type === "credit" ? "income" : "expense",
+      }));
+
+      const res = await fetch("/api/transactions/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json() as { message?: string; totalImported?: number; autoCategorized?: number; error?: string };
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Eroare la import");
+        return;
+      }
+
+      setImportResult({
+        totalImported: data.totalImported ?? 0,
+        autoCategorized: data.autoCategorized ?? 0,
+      });
+    } catch {
+      toast.error("Eroare de rețea. Încearcă din nou.");
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handleReset = () => {
+    setSelectedFile(null);
+    setParsedTransactions([]);
+    setImportResult(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleLogout = async () => {
@@ -61,6 +123,9 @@ export default function UploadPage() {
       toast.error("Eroare la delogare");
     }
   };
+
+  const previewTransactions = parsedTransactions.slice(0, 10);
+  const remainingCount = parsedTransactions.length - 10;
 
   if (loading) {
     return (
@@ -135,7 +200,12 @@ export default function UploadPage() {
                   {(selectedFile.size / 1024).toFixed(1)} KB
                 </p>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setSelectedFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedFile(null);
+                    setParsedTransactions([]);
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                  }}
                   className="mt-1 text-xs text-red-500 hover:text-red-600 font-semibold"
                 >
                   Elimină fișierul
@@ -167,25 +237,99 @@ export default function UploadPage() {
             </select>
           </div>
 
-          {/* Buton Upload */}
+          {/* Buton Import */}
           <button
             onClick={handleUpload}
-            className="w-full py-3.5 bg-teal-500 hover:bg-teal-400 text-white font-bold rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-lg text-lg"
+            disabled={!selectedBankId || isImporting || parsedTransactions.length === 0}
+            className="w-full py-3.5 bg-teal-500 hover:bg-teal-400 text-white font-bold rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-lg text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
           >
-            ⬆️ Upload
+            {isImporting
+              ? "⏳ Se importă..."
+              : `⬆️ Importă ${parsedTransactions.length} tranzacții`}
           </button>
         </div>
+
+        {/* Succes import */}
+        {importResult && (
+          <div className="glass rounded-2xl p-8 mb-6 animate-fade-in text-center">
+            <p className="text-5xl mb-4">🎉</p>
+            <p className="text-xl font-bold text-gray-900 mb-1">
+              {importResult.totalImported} tranzacții importate
+            </p>
+            <p className="text-gray-600 mb-6">
+              {importResult.autoCategorized} categorizate automat
+            </p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={handleReset}
+                className="px-6 py-2.5 bg-white/60 hover:bg-white/80 text-gray-700 font-semibold rounded-xl border border-white/40 transition-all duration-200"
+              >
+                📂 Încarcă alt fișier
+              </button>
+              <button
+                onClick={() => router.push("/dashboard/transactions")}
+                className="px-6 py-2.5 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-200"
+              >
+                💸 Vezi tranzacțiile
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Preview table */}
         <div className="glass rounded-2xl overflow-hidden animate-fade-in delay-2">
           <div className="px-6 py-4 border-b border-white/30">
             <h2 className="text-lg font-bold text-gray-900">Preview tranzacții</h2>
           </div>
-          <div className="p-10 text-center">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-gray-700 font-semibold">Selectează un fișier pentru a vedea preview-ul</p>
-            <p className="text-gray-500 text-sm mt-1">Coloane: Dată, Descriere, Sumă, Valută</p>
-          </div>
+
+          {parsedTransactions.length === 0 ? (
+            <div className="p-10 text-center">
+              <p className="text-4xl mb-3">🔍</p>
+              <p className="text-gray-700 font-semibold">Selectează un fișier pentru a vedea preview-ul</p>
+              <p className="text-gray-500 text-sm mt-1">Coloane: Dată, Descriere, Sumă, Valută</p>
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/20 bg-white/10">
+                      <th className="text-left px-4 py-3 font-semibold text-gray-700">Dată</th>
+                      <th className="text-left px-4 py-3 font-semibold text-gray-700">Descriere</th>
+                      <th className="text-right px-4 py-3 font-semibold text-gray-700">Sumă</th>
+                      <th className="text-left px-4 py-3 font-semibold text-gray-700">Valută</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {previewTransactions.map((tx, index) => {
+                      const [y, m, d] = tx.date.split("-");
+                      const formattedDate = `${d}.${m}.${y}`;
+                      return (
+                        <tr key={index} className="border-b border-white/10 hover:bg-white/10 transition-colors">
+                          <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{formattedDate}</td>
+                          <td className="px-4 py-3 text-gray-800 max-w-[240px] truncate">{tx.description}</td>
+                          <td className={`px-4 py-3 text-right font-semibold whitespace-nowrap ${tx.amount < 0 ? "text-red-600" : "text-green-600"}`}>
+                            {tx.amount < 0 ? "" : "+"}{tx.amount.toFixed(2)}
+                          </td>
+                          <td className="px-4 py-3 text-gray-600">{tx.currency ?? "RON"}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Footer tabel */}
+              <div className="px-6 py-4 border-t border-white/20 flex items-center justify-between">
+                <p className="text-sm text-gray-600">
+                  Total: <span className="font-semibold text-gray-800">{parsedTransactions.length} tranzacții găsite în fișier</span>
+                  {remainingCount > 0 && (
+                    <span className="ml-2 text-gray-500">...și încă {remainingCount} tranzacții</span>
+                  )}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

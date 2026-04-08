@@ -24,6 +24,7 @@ export default function CategoriesPage() {
   const [formName, setFormName] = useState("");
   const [formType, setFormType] = useState<"income" | "expense">("expense");
   const [formIcon, setFormIcon] = useState("📁");
+  const [formDescription, setFormDescription] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function CategoriesPage() {
     setFormName("");
     setFormType(defaultType);
     setFormIcon("📁");
+    setFormDescription("");
     setModalOpen(true);
   };
 
@@ -56,6 +58,7 @@ export default function CategoriesPage() {
     setFormName(cat.name);
     setFormType(cat.type as "income" | "expense");
     setFormIcon(cat.icon ?? "📁");
+    setFormDescription(cat.description ?? "");
     setModalOpen(true);
   };
 
@@ -65,6 +68,7 @@ export default function CategoriesPage() {
     setFormName("");
     setFormType("expense");
     setFormIcon("📁");
+    setFormDescription("");
   };
 
   const handleSave = async () => {
@@ -79,7 +83,7 @@ export default function CategoriesPage() {
         const res = await fetch(`/api/categories/${editingCategory.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: formName, type: formType, icon: formIcon }),
+          body: JSON.stringify({ name: formName, type: formType, icon: formIcon, description: formDescription }),
         });
         const data = await res.json() as { category: Category; error?: string };
         if (!res.ok) { toast.error(data.error ?? "Eroare la salvare"); return; }
@@ -89,7 +93,7 @@ export default function CategoriesPage() {
         const res = await fetch("/api/categories", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: formName, type: formType, icon: formIcon }),
+          body: JSON.stringify({ name: formName, type: formType, icon: formIcon, description: formDescription }),
         });
         const data = await res.json() as { category: Category; error?: string };
         if (!res.ok) { toast.error(data.error ?? "Eroare la salvare"); return; }
@@ -312,6 +316,21 @@ export default function CategoriesPage() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Keywords pentru auto-categorizare */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Keywords auto-categorizare
+                </label>
+                <p className="text-xs text-gray-500 mb-2">Cuvinte cheie separate prin virgulă (ex: mega image, kaufland, lidl)</p>
+                <input
+                  type="text"
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
+                  placeholder="ex: mega image, kaufland, lidl, profi"
+                  className="w-full px-4 py-3 rounded-xl border border-white/40 bg-white/60 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                />
               </div>
             </div>
 

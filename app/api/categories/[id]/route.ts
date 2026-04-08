@@ -15,8 +15,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
-    const body = await request.json() as { name?: string; type?: string; icon?: string };
-    const { name, type, icon } = body;
+    const body = await request.json() as { name?: string; type?: string; icon?: string; description?: string };
+    const { name, type, icon, description } = body;
 
     if (!name || name.trim() === "") {
       return NextResponse.json({ error: "Numele categoriei este obligatoriu" }, { status: 400 });
@@ -32,6 +32,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         name: name.trim(),
         type,
         icon: icon ?? "📁",
+        description: description?.trim() ?? null,
         updatedAt: new Date(),
       })
       .where(and(eq(schema.categories.id, id), eq(schema.categories.userId, user.id)))

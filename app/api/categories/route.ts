@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json() as { name?: string; type?: string; icon?: string };
-    const { name, type, icon } = body;
+    const body = await request.json() as { name?: string; type?: string; icon?: string; description?: string };
+    const { name, type, icon, description } = body;
 
     if (!name || name.trim() === "") {
       return NextResponse.json({ error: "Numele categoriei este obligatoriu" }, { status: 400 });
@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
         name: name.trim(),
         type,
         icon: icon ?? "📁",
+        description: description?.trim() ?? null,
         isSystemCategory: false,
       })
       .returning();
