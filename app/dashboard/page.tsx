@@ -227,6 +227,11 @@ export default function DashboardPage() {
             <p className="font-bold text-gray-900 mb-1">Valute</p>
             <p className="text-sm text-gray-600">Administrează valutele</p>
           </a>
+          <a href="/dashboard/reports" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+            <p className="text-4xl mb-3">📊</p>
+            <p className="font-bold text-gray-900 mb-1">Rapoarte</p>
+            <p className="text-sm text-gray-600">Grafice și statistici</p>
+          </a>
         </div>
 
         {/* Tranzacții recente */}

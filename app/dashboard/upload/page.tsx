@@ -74,14 +74,24 @@ export default function UploadPage() {
 
     setIsImporting(true);
     try {
-      const body = parsedTransactions.map((tx) => ({
-        bankId: selectedBankId,
-        date: tx.date,
-        description: tx.description,
-        amount: tx.amount,
-        currency: tx.currency ?? "RON",
-        type: tx.type === "credit" ? "income" : "expense",
-      }));
+      const EXCLUDED_DESCRIPTIONS = ["rulaj zi", "sold final zi", "rulaj total cont", "sold anterior"];
+      const INCOME_KEYWORDS = ["procesare borderou plata", "procesare borderou plată"];
+
+      const body = parsedTransactions
+        .filter((tx) => !EXCLUDED_DESCRIPTIONS.some((excl) => tx.description.toLowerCase().trim() === excl))
+        .map((tx) => {
+          const descLower = tx.description.toLowerCase();
+          const isIncome = INCOME_KEYWORDS.some((kw) => descLower.includes(kw));
+          const amount = isIncome ? Math.abs(tx.amount) : tx.amount;
+          return {
+            bankId: selectedBankId,
+            date: tx.date,
+            description: tx.description,
+            amount,
+            currency: tx.currency ?? "RON",
+            type: (isIncome || tx.type === "credit") ? "income" : "expense",
+          };
+        });
 
       const res = await fetch("/api/transactions/bulk", {
         method: "POST",

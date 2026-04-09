@@ -25,6 +25,9 @@ export default function TransactionsPage() {
   // Modal descriere
   const [descriptionModal, setDescriptionModal] = useState<string | null>(null);
 
+  // Selectare categorie inline
+  const [editingCategoryTxId, setEditingCategoryTxId] = useState<string | null>(null);
+
   // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [formDate, setFormDate] = useState(new Date().toISOString().split("T")[0]);
@@ -181,6 +184,23 @@ export default function TransactionsPage() {
       toast.success("Tranzacție ștearsă!");
     } catch {
       toast.error("Eroare la ștergere");
+    }
+  };
+
+  const handleSetCategory = async (txId: string, categoryId: string | null) => {
+    try {
+      const res = await fetch(`/api/transactions/${txId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ categoryId }),
+      });
+      const data = await res.json() as { transaction?: Transaction; error?: string };
+      if (!res.ok) { toast.error(data.error ?? "Eroare la actualizare"); return; }
+      setAllTransactions((prev) => prev.map((t) => t.id === txId ? { ...t, categoryId } : t));
+      setEditingCategoryTxId(null);
+      toast.success(categoryId ? "Categorie actualizată!" : "Categorie eliminată!");
+    } catch {
+      toast.error("Eroare la actualizare");
     }
   };
 
@@ -368,10 +388,42 @@ export default function TransactionsPage() {
                         )}
                       </td>
                       <td className="px-5 py-4">
-                        {category ? (
-                          <span className="text-sm text-gray-700">{category.icon} {category.name}</span>
+                        {editingCategoryTxId === tx.id ? (
+                          <div className="flex items-center gap-1">
+                            <select
+                              autoFocus
+                              defaultValue={tx.categoryId ?? ""}
+                              onChange={(e) => handleSetCategory(tx.id, e.target.value || null)}
+                              onBlur={() => setEditingCategoryTxId(null)}
+                              className="px-2 py-1 rounded-lg border border-white/40 bg-white/80 text-gray-700 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400"
+                            >
+                              <option value="">— Fără categorie —</option>
+                              {categories.map((c) => (
+                                <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : category ? (
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm text-gray-700">{category.icon} {category.name}</span>
+                            <button
+                              onClick={() => setEditingCategoryTxId(tx.id)}
+                              className="text-gray-400 hover:text-teal-600 transition-colors text-xs"
+                              title="Schimbă categoria"
+                            >✏️</button>
+                            <button
+                              onClick={() => handleSetCategory(tx.id, null)}
+                              className="text-gray-400 hover:text-red-500 transition-colors text-xs"
+                              title="Elimină categoria"
+                            >✕</button>
+                          </div>
                         ) : (
-                          <span className="text-gray-400 text-sm">—</span>
+                          <button
+                            onClick={() => setEditingCategoryTxId(tx.id)}
+                            className="text-teal-600 hover:text-teal-700 text-xs font-semibold transition-colors"
+                          >
+                            + Adaugă
+                          </button>
                         )}
                       </td>
                       <td className={`px-5 py-4 text-sm font-bold text-right whitespace-nowrap ${amount >= 0 ? "text-green-600" : "text-red-500"}`}>

@@ -22,8 +22,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Numele categoriei este obligatoriu" }, { status: 400 });
     }
 
-    if (type !== "income" && type !== "expense") {
-      return NextResponse.json({ error: "Tipul trebuie să fie income sau expense" }, { status: 400 });
+    const VALID_TYPES = ["income", "expense", "transfer", "savings"];
+    if (!type || !VALID_TYPES.includes(type)) {
+      return NextResponse.json({ error: "Tipul trebuie să fie income, expense, transfer sau savings" }, { status: 400 });
     }
 
     const [category] = await db

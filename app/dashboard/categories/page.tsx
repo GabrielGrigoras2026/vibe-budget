@@ -22,7 +22,7 @@ export default function CategoriesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [formName, setFormName] = useState("");
-  const [formType, setFormType] = useState<"income" | "expense">("expense");
+  const [formType, setFormType] = useState<"income" | "expense" | "transfer" | "savings">("expense");
   const [formIcon, setFormIcon] = useState("📁");
   const [formDescription, setFormDescription] = useState("");
   const [saving, setSaving] = useState(false);
@@ -44,7 +44,7 @@ export default function CategoriesPage() {
     }
   };
 
-  const openAddModal = (defaultType: "income" | "expense" = "expense") => {
+  const openAddModal = (defaultType: "income" | "expense" | "transfer" | "savings" = "expense") => {
     setEditingCategory(null);
     setFormName("");
     setFormType(defaultType);
@@ -56,7 +56,7 @@ export default function CategoriesPage() {
   const openEditModal = (cat: Category) => {
     setEditingCategory(cat);
     setFormName(cat.name);
-    setFormType(cat.type as "income" | "expense");
+    setFormType(cat.type as "income" | "expense" | "transfer" | "savings");
     setFormIcon(cat.icon ?? "📁");
     setFormDescription(cat.description ?? "");
     setModalOpen(true);
@@ -134,6 +134,8 @@ export default function CategoriesPage() {
 
   const income = categories.filter((c) => c.type === "income");
   const expense = categories.filter((c) => c.type === "expense");
+  const transfer = categories.filter((c) => c.type === "transfer");
+  const savings = categories.filter((c) => c.type === "savings");
 
   if (loading) {
     return (
@@ -250,11 +252,27 @@ export default function CategoriesPage() {
         </div>
 
         {/* Cheltuieli */}
-        <div className="animate-fade-in delay-2">
+        <div className="mb-8 animate-fade-in delay-2">
           <div className="mb-3">
             <h2 className="text-xl font-bold text-gray-900">📉 Cheltuieli</h2>
           </div>
           <CategoryTable items={expense} emptyLabel="Nicio categorie de cheltuială" />
+        </div>
+
+        {/* Transferuri */}
+        <div className="mb-8 animate-fade-in delay-2">
+          <div className="mb-3">
+            <h2 className="text-xl font-bold text-gray-900">🔄 Transferuri</h2>
+          </div>
+          <CategoryTable items={transfer} emptyLabel="Nicio categorie de transfer" />
+        </div>
+
+        {/* Economii */}
+        <div className="animate-fade-in delay-2">
+          <div className="mb-3">
+            <h2 className="text-xl font-bold text-gray-900">🐷 Economii</h2>
+          </div>
+          <CategoryTable items={savings} emptyLabel="Nicio categorie de economii" />
         </div>
       </div>
 
@@ -284,18 +302,30 @@ export default function CategoriesPage() {
               {/* Tip */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Tip</label>
-                <div className="flex gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setFormType("income")}
-                    className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all ${formType === "income" ? "bg-green-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"}`}
+                    className={`py-2.5 rounded-xl font-semibold text-sm transition-all ${formType === "income" ? "bg-green-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"}`}
                   >
                     📈 Venit
                   </button>
                   <button
                     onClick={() => setFormType("expense")}
-                    className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all ${formType === "expense" ? "bg-red-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"}`}
+                    className={`py-2.5 rounded-xl font-semibold text-sm transition-all ${formType === "expense" ? "bg-red-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"}`}
                   >
                     📉 Cheltuială
+                  </button>
+                  <button
+                    onClick={() => setFormType("transfer")}
+                    className={`py-2.5 rounded-xl font-semibold text-sm transition-all ${formType === "transfer" ? "bg-blue-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"}`}
+                  >
+                    🔄 Transfer
+                  </button>
+                  <button
+                    onClick={() => setFormType("savings")}
+                    className={`py-2.5 rounded-xl font-semibold text-sm transition-all ${formType === "savings" ? "bg-teal-500 text-white" : "bg-white/60 text-gray-700 hover:bg-white/80"}`}
+                  >
+                    🐷 Economii
                   </button>
                 </div>
               </div>

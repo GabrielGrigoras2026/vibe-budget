@@ -457,7 +457,6 @@ function formatDate(dateStr: string | number): string {
   // Dacă e deja ISO format (cu sau fără timestamp)
   // Ex: "2025-12-02 08:57:52" (Russian) sau "2025-12-02" (ISO)
   if (/^\d{4}-\d{2}-\d{2}/.test(cleanStr)) {
-    // Extragem doar partea de dată (fără timestamp: " 08:57:52" sau "T08:57:52")
     const result = cleanStr.split(" ")[0].split("T")[0];
     console.log('[formatDate] ISO format detected. Result:', result);
     return result;
@@ -486,15 +485,30 @@ function formatDate(dateStr: string | number): string {
     }
   }
 
-  // Parsăm formate românești: DD.MM.YYYY sau DD/MM/YYYY
+  // Parsăm formate cu 3 componente: DD.MM.YYYY, DD/MM/YYYY sau M/D/YYYY (american — BT CSV export)
   const parts = cleanStr.split(/[./-]/);
   console.log('[formatDate] Parsed parts:', parts);
 
   if (parts.length === 3) {
-    const [day, month, year] = parts;
-    const fullYear = year.length === 2 ? `20${year}` : year;
-    const result = `${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    console.log('[formatDate] Romanian format detected. Result:', result);
+    const p0 = parseInt(parts[0]);
+    const p1 = parseInt(parts[1]);
+    const p2 = parseInt(parts[2]);
+
+    // Format american M/D/YYYY: primul număr e luna (1-12), al doilea e ziua, al treilea e anul (4 cifre)
+    // Ex: 3/2/2026 = 2 martie 2026, 2/26/2026 = 26 februarie 2026
+    if (parts[2].length === 4 && p0 <= 12 && p1 >= 1) {
+      const year = parts[2];
+      const month = String(p0).padStart(2, "0");
+      const day = String(p1).padStart(2, "0");
+      const result = `${year}-${month}-${day}`;
+      console.log('[formatDate] American M/D/YYYY format detected. Result:', result);
+      return result;
+    }
+
+    // Format românesc DD.MM.YYYY
+    const fullYear = parts[2].length === 2 ? `20${parts[2]}` : parts[2];
+    const result = `${fullYear}-${String(p1).padStart(2, "0")}-${String(p0).padStart(2, "0")}`;
+    console.log('[formatDate] Romanian DD.MM.YYYY format detected. Result:', result);
     return result;
   }
 
