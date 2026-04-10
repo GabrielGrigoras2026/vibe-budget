@@ -28,6 +28,9 @@ export default function TransactionsPage() {
   // Selectare categorie inline
   const [editingCategoryTxId, setEditingCategoryTxId] = useState<string | null>(null);
 
+  // Recategorizare
+  const [recategorizing, setRecategorizing] = useState(false);
+
   // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [formDate, setFormDate] = useState(new Date().toISOString().split("T")[0]);
@@ -73,7 +76,8 @@ export default function TransactionsPage() {
       if (dateFrom && tx.date < dateFrom) return false;
       if (dateTo && tx.date > dateTo) return false;
       if (bankFilter && tx.bankId !== bankFilter) return false;
-      if (categoryFilter && tx.categoryId !== categoryFilter) return false;
+      if (categoryFilter === "__none__" && tx.categoryId !== null) return false;
+      if (categoryFilter && categoryFilter !== "__none__" && tx.categoryId !== categoryFilter) return false;
       return true;
     });
   }, [allTransactions, search, dateFrom, dateTo, bankFilter, categoryFilter, banks, categories]);
@@ -187,6 +191,25 @@ export default function TransactionsPage() {
     }
   };
 
+  const handleRecategorize = async () => {
+    setRecategorizing(true);
+    try {
+      const res = await fetch("/api/transactions/recategorize", { method: "POST" });
+      const data = await res.json() as { updated?: number; total?: number; error?: string };
+      if (!res.ok) { toast.error(data.error ?? "Eroare la recategorizare"); return; }
+      if (data.updated === 0) {
+        toast.success("Toate tranzacțiile au deja categorie!");
+      } else {
+        toast.success(`${data.updated} din ${data.total} tranzacții recategorizate!`);
+        fetchTransactions();
+      }
+    } catch {
+      toast.error("Eroare de rețea. Încearcă din nou.");
+    } finally {
+      setRecategorizing(false);
+    }
+  };
+
   const handleSetCategory = async (txId: string, categoryId: string | null) => {
     try {
       const res = await fetch(`/api/transactions/${txId}`, {
@@ -280,6 +303,13 @@ export default function TransactionsPage() {
             >
               + Adaugă Tranzacție
             </button>
+            <button
+              onClick={handleRecategorize}
+              disabled={recategorizing}
+              className="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {recategorizing ? "⏳ Se procesează..." : "🔄 Recategorizează"}
+            </button>
             <input
               type="text"
               value={search}
@@ -332,6 +362,7 @@ export default function TransactionsPage() {
               className="px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             >
               <option value="">Categorie</option>
+              <option value="__none__">❓ Fără categorie</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
               ))}
