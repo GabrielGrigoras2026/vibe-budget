@@ -23,6 +23,7 @@ interface CategoryData {
   categoryName: string;
   icon: string;
   total: number;
+  [key: string]: unknown;
 }
 
 interface MonthData {
