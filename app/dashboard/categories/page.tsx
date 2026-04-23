@@ -157,23 +157,23 @@ export default function CategoriesPage() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/30">
-              <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Icon</th>
-              <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume</th>
-              <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Tip</th>
-              <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
+              <th className="text-left px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Icon</th>
+              <th className="text-left px-2 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume</th>
+              <th className="text-left px-2 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Tip</th>
+              <th className="text-right px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
             </tr>
           </thead>
           <tbody>
             {items.map((cat) => (
               <tr key={cat.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
-                <td className="px-6 py-4 text-2xl">{cat.icon ?? "📁"}</td>
-                <td className="px-6 py-4 font-semibold text-gray-900">{cat.name}</td>
-                <td className="px-6 py-4">
+                <td className="px-3 py-4 text-2xl">{cat.icon ?? "📁"}</td>
+                <td className="px-2 py-4 font-semibold text-gray-900">{cat.name}</td>
+                <td className="px-2 py-4">
                   {cat.isSystemCategory && (
                     <span className="px-2 py-0.5 text-xs font-semibold bg-white/40 text-gray-600 rounded-full">sistem</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-3 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => openEditModal(cat)}

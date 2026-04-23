@@ -283,14 +283,14 @@ export default function TransactionsPage() {
       {/* Content */}
       <div className="container mx-auto px-4 py-10 max-w-5xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 animate-fade-in">
-          <h1 className="text-4xl font-bold text-gray-900">💸 Tranzacții</h1>
+        <div className="mb-6 animate-fade-in">
           <button
             onClick={() => router.push("/dashboard")}
-            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap ml-4"
+            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors mb-2 block"
           >
             ← Înapoi
           </button>
+          <h1 className="text-4xl font-bold text-gray-900">💸 Tranzacții</h1>
         </div>
 
         {/* Filtre */}
@@ -321,8 +321,8 @@ export default function TransactionsPage() {
               className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/60 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             />
           </div>
-          {/* Rândul 3: filtre date + bancă + categorie */}
-          <div className="flex flex-wrap items-center gap-3">
+          {/* Rândul 3: filtre date */}
+          <div className="flex flex-wrap items-center gap-3 mb-3">
             <div className="flex items-center gap-2">
               <label className="text-sm text-gray-600 whitespace-nowrap">De la</label>
               <input
@@ -349,10 +349,13 @@ export default function TransactionsPage() {
                 🗑️ Șterge perioada
               </button>
             )}
+          </div>
+          {/* Rândul 4: filtre bancă + categorie */}
+          <div className="flex flex-wrap items-center gap-3">
             <select
               value={bankFilter}
               onChange={(e) => setBankFilter(e.target.value)}
-              className="px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+              className="flex-1 min-w-[120px] px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             >
               <option value="">Bancă</option>
               {banks.map((b) => (
@@ -362,7 +365,7 @@ export default function TransactionsPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+              className="flex-1 min-w-[120px] px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             >
               <option value="">Categorie</option>
               <option value="__none__">❓ Fără categorie</option>

@@ -192,22 +192,22 @@ export default function BanksPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/30">
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Culoare</th>
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume bancă</th>
-                  <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
+                  <th className="text-left px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Culoare</th>
+                  <th className="text-left px-2 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume bancă</th>
+                  <th className="text-right px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
                 </tr>
               </thead>
               <tbody>
                 {banks.map((bank) => (
                   <tr key={bank.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-4">
                       <div
                         className="w-7 h-7 rounded-lg border border-white/40 shadow-sm"
                         style={{ backgroundColor: bank.color ?? "#6366f1" }}
                       />
                     </td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">{bank.name}</td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-2 py-4 font-semibold text-gray-900">{bank.name}</td>
+                    <td className="px-3 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditModal(bank)}
