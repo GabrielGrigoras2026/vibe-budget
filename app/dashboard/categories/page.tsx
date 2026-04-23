@@ -154,46 +154,34 @@ export default function CategoriesPage() {
           <p className="text-gray-700 font-semibold">{emptyLabel}</p>
         </div>
       ) : (
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-white/30">
-              <th className="text-left px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Icon</th>
-              <th className="text-left px-2 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume</th>
-              <th className="text-left px-2 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Tip</th>
-              <th className="text-right px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((cat) => (
-              <tr key={cat.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
-                <td className="px-3 py-4 text-2xl">{cat.icon ?? "📁"}</td>
-                <td className="px-2 py-4 font-semibold text-gray-900">{cat.name}</td>
-                <td className="px-2 py-4">
-                  {cat.isSystemCategory && (
-                    <span className="px-2 py-0.5 text-xs font-semibold bg-white/40 text-gray-600 rounded-full">sistem</span>
-                  )}
-                </td>
-                <td className="px-3 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      onClick={() => openEditModal(cat)}
-                      className="px-4 py-1.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105"
-                    >
-                      Editează
-                    </button>
-                    <button
-                      onClick={() => handleDelete(cat)}
-                      disabled={cat.isSystemCategory ?? false}
-                      className="px-4 py-1.5 bg-red-500 hover:bg-red-400 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
-                    >
-                      Șterge
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="divide-y divide-white/20">
+          {items.map((cat) => (
+            <div key={cat.id} className="flex items-center justify-between px-4 py-3 hover:bg-white/20 transition-colors">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="text-2xl flex-shrink-0">{cat.icon ?? "📁"}</span>
+                <span className="font-semibold text-gray-900 truncate">{cat.name}</span>
+                {cat.isSystemCategory && (
+                  <span className="px-2 py-0.5 text-xs font-semibold bg-white/40 text-gray-600 rounded-full flex-shrink-0">sistem</span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                <button
+                  onClick={() => openEditModal(cat)}
+                  className="px-3 py-1.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                >
+                  Editează
+                </button>
+                <button
+                  onClick={() => handleDelete(cat)}
+                  disabled={cat.isSystemCategory ?? false}
+                  className="px-3 py-1.5 bg-red-500 hover:bg-red-400 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                >
+                  Șterge
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

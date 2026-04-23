@@ -321,51 +321,56 @@ export default function TransactionsPage() {
               className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/60 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             />
           </div>
-          {/* Rândul 3: filtre date */}
-          <div className="flex flex-wrap items-center gap-3 mb-3">
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600 whitespace-nowrap">De la</label>
-              <input
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                className="px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600 whitespace-nowrap">Până la</label>
-              <input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
-              />
-            </div>
-            {dateFrom && dateTo && (
+          {/* Rândul 3: De la */}
+          <div className="mb-3">
+            <label className="text-sm text-gray-600 block mb-1">De la</label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+            />
+          </div>
+          {/* Rândul 4: Până la */}
+          <div className="mb-3">
+            <label className="text-sm text-gray-600 block mb-1">Până la</label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+            />
+          </div>
+          {/* Buton Șterge perioada */}
+          {dateFrom && dateTo && (
+            <div className="mb-3">
               <button
                 onClick={handleDeletePeriod}
-                className="px-4 py-2 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105 whitespace-nowrap"
+                className="w-full px-4 py-2 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
               >
                 🗑️ Șterge perioada
               </button>
-            )}
-          </div>
-          {/* Rândul 4: filtre bancă + categorie */}
-          <div className="flex flex-wrap items-center gap-3">
+            </div>
+          )}
+          {/* Rândul 5: Bancă */}
+          <div className="mb-3">
             <select
               value={bankFilter}
               onChange={(e) => setBankFilter(e.target.value)}
-              className="flex-1 min-w-[120px] px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+              className="w-full px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             >
               <option value="">Bancă</option>
               {banks.map((b) => (
                 <option key={b.id} value={b.id}>{b.name}</option>
               ))}
             </select>
+          </div>
+          {/* Rândul 6: Categorie */}
+          <div>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="flex-1 min-w-[120px] px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+              className="w-full px-3 py-2 rounded-xl border border-white/40 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             >
               <option value="">Categorie</option>
               <option value="__none__">❓ Fără categorie</option>

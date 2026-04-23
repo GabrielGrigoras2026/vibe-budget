@@ -189,44 +189,33 @@ export default function BanksPage() {
               <p className="text-gray-500 text-sm mt-1">Apasă &quot;Adaugă bancă&quot; pentru a începe.</p>
             </div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/30">
-                  <th className="text-left px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Culoare</th>
-                  <th className="text-left px-2 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume bancă</th>
-                  <th className="text-right px-3 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
-                </tr>
-              </thead>
-              <tbody>
-                {banks.map((bank) => (
-                  <tr key={bank.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
-                    <td className="px-3 py-4">
-                      <div
-                        className="w-7 h-7 rounded-lg border border-white/40 shadow-sm"
-                        style={{ backgroundColor: bank.color ?? "#6366f1" }}
-                      />
-                    </td>
-                    <td className="px-2 py-4 font-semibold text-gray-900">{bank.name}</td>
-                    <td className="px-3 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => openEditModal(bank)}
-                          className="px-4 py-1.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105"
-                        >
-                          Editează
-                        </button>
-                        <button
-                          onClick={() => handleDelete(bank)}
-                          className="px-4 py-1.5 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105"
-                        >
-                          Șterge
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="divide-y divide-white/20">
+              {banks.map((bank) => (
+                <div key={bank.id} className="flex items-center justify-between px-4 py-4 hover:bg-white/20 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-7 h-7 rounded-lg border border-white/40 shadow-sm flex-shrink-0"
+                      style={{ backgroundColor: bank.color ?? "#6366f1" }}
+                    />
+                    <span className="font-semibold text-gray-900">{bank.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => openEditModal(bank)}
+                      className="px-3 py-1.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                    >
+                      Editează
+                    </button>
+                    <button
+                      onClick={() => handleDelete(bank)}
+                      className="px-3 py-1.5 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                    >
+                      Șterge
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>

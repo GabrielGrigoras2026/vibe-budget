@@ -181,20 +181,8 @@ export default function UploadPage() {
 
         {/* Form card */}
         <div className="glass rounded-2xl p-8 mb-6 animate-fade-in delay-1">
-          {/* Drop zone */}
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-200 mb-6 ${
-              isDragging
-                ? "border-teal-500 bg-teal-400/20 scale-[1.01]"
-                : selectedFile
-                ? "border-green-500 bg-green-400/10"
-                : "border-white/40 bg-white/20 hover:bg-white/30 hover:border-white/60"
-            }`}
-          >
+          {/* Selectare fișier */}
+          <div className="mb-6">
             <input
               ref={fileInputRef}
               type="file"
@@ -203,32 +191,34 @@ export default function UploadPage() {
               onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
             />
             {selectedFile ? (
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-4xl">✅</span>
-                <p className="font-semibold text-gray-900">{selectedFile.name}</p>
-                <p className="text-sm text-gray-600">
-                  {(selectedFile.size / 1024).toFixed(1)} KB
-                </p>
+              <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-green-500 bg-green-400/10">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl flex-shrink-0">✅</span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900 truncate">{selectedFile.name}</p>
+                    <p className="text-sm text-gray-600">{(selectedFile.size / 1024).toFixed(1)} KB</p>
+                  </div>
+                </div>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={() => {
                     setSelectedFile(null);
                     setParsedTransactions([]);
                     if (fileInputRef.current) fileInputRef.current.value = "";
                   }}
-                  className="mt-1 text-xs text-red-500 hover:text-red-600 font-semibold"
+                  className="ml-3 flex-shrink-0 text-sm text-red-500 hover:text-red-600 font-semibold"
                 >
-                  Elimină fișierul
+                  Elimină
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-3">
-                <span className="text-5xl">📂</span>
-                <p className="font-semibold text-gray-800">
-                  {isDragging ? "Dă drumul fișierului..." : "Trage fișierul aici sau click pentru a selecta"}
-                </p>
-                <p className="text-sm text-gray-500">Acceptă: .csv, .xlsx, .xls</p>
-              </div>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full py-5 rounded-2xl border-2 border-dashed border-white/40 bg-white/20 hover:bg-white/30 hover:border-teal-400 transition-all duration-200 flex flex-col items-center gap-2"
+              >
+                <span className="text-4xl">📂</span>
+                <span className="font-semibold text-gray-800">Selectează fișier CSV sau Excel</span>
+                <span className="text-sm text-gray-500">Acceptă: .csv, .xlsx, .xls</span>
+              </button>
             )}
           </div>
 
