@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,21 +16,36 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const supabase = createClient();
+
+      // 1. Creare cont în Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+        options: {
+          data: { name: form.name },
+        },
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.error || "Eroare la înregistrare");
+      if (authError || !authData.user) {
+        toast.error(authError?.message || "Eroare la înregistrare");
         return;
       }
 
+      // 2. Salvare nume în tabela public.users via API
+      await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: authData.user.id,
+          email: form.email,
+          name: form.name,
+        }),
+      });
+
       toast.success("Cont creat cu succes!");
       router.push("/dashboard");
+      router.refresh();
     } catch {
       toast.error("Eroare de conexiune");
     } finally {

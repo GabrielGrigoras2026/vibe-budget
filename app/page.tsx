@@ -13,30 +13,27 @@
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-orange-50  ">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-gray-900  mb-6">
-            💰 Vibe Budget
-          </h1>
-          <p className="text-xl text-gray-600  mb-8">
-            Aplicație de gestiune financiară personală
-          </p>
-
-          <div className="flex items-center justify-center gap-4">
-            <a
-              href="/register"
-              className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              Înregistrează-te
-            </a>
-            <a
-              href="/login"
-              className="px-8 py-3 bg-orange-500 hover:bg-orange-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              Login
-            </a>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-orange-300 flex items-center justify-center px-4">
+      <div className="text-center">
+        <h1 className="text-5xl font-bold text-white mb-4 drop-shadow">
+          💰 Vibe Budget
+        </h1>
+        <p className="text-xl text-white/80 mb-10">
+          Aplicație de gestiune financiară personală
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/register"
+            className="w-full sm:w-auto px-10 py-3.5 bg-white text-teal-600 font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg"
+          >
+            Înregistrează-te
+          </a>
+          <a
+            href="/login"
+            className="w-full sm:w-auto px-10 py-3.5 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg"
+          >
+            Login
+          </a>
         </div>
       </div>
     </div>
