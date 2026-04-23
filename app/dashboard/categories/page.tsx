@@ -156,25 +156,25 @@ export default function CategoriesPage() {
       ) : (
         <div className="divide-y divide-white/20">
           {items.map((cat) => (
-            <div key={cat.id} className="flex items-center justify-between px-4 py-3 hover:bg-white/20 transition-colors">
-              <div className="flex items-center gap-3 min-w-0">
+            <div key={cat.id} className="px-4 py-4 hover:bg-white/20 transition-colors">
+              <div className="flex items-center gap-3 mb-3">
                 <span className="text-2xl flex-shrink-0">{cat.icon ?? "📁"}</span>
-                <span className="font-semibold text-gray-900 truncate">{cat.name}</span>
+                <span className="font-semibold text-gray-900">{cat.name}</span>
                 {cat.isSystemCategory && (
-                  <span className="px-2 py-0.5 text-xs font-semibold bg-white/40 text-gray-600 rounded-full flex-shrink-0">sistem</span>
+                  <span className="px-2 py-0.5 text-xs font-semibold bg-white/40 text-gray-600 rounded-full">sistem</span>
                 )}
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+              <div className="flex gap-2">
                 <button
                   onClick={() => openEditModal(cat)}
-                  className="px-3 py-1.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                  className="flex-1 py-2 bg-teal-500 hover:bg-teal-400 text-white text-sm font-semibold rounded-lg transition-all duration-200"
                 >
                   Editează
                 </button>
                 <button
                   onClick={() => handleDelete(cat)}
                   disabled={cat.isSystemCategory ?? false}
-                  className="px-3 py-1.5 bg-red-500 hover:bg-red-400 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                  className="flex-1 py-2 bg-red-500 hover:bg-red-400 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200"
                 >
                   Șterge
                 </button>

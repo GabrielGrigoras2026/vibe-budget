@@ -188,33 +188,25 @@ export default function CurrenciesPage() {
               <p className="text-gray-500 text-sm mt-1">Folosește preseturile de mai sus sau adaugă manual.</p>
             </div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/30">
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Cod</th>
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Simbol</th>
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Nume</th>
-                  <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currencies.map((currency) => (
-                  <tr key={currency.id} className="border-b border-white/20 last:border-0 hover:bg-white/20 transition-colors">
-                    <td className="px-6 py-4 font-bold text-gray-900">{currency.code}</td>
-                    <td className="px-6 py-4 font-semibold text-gray-700">{currency.symbol}</td>
-                    <td className="px-6 py-4 text-gray-700">{currency.name}</td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => handleDelete(currency)}
-                        className="px-4 py-1.5 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105"
-                      >
-                        Șterge
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="divide-y divide-white/20">
+              {currencies.map((currency) => (
+                <div key={currency.id} className="px-4 py-4 hover:bg-white/20 transition-colors">
+                  <div className="mb-3">
+                    <span className="font-bold text-gray-900 text-lg">{currency.code}</span>
+                    <span className="text-gray-500 mx-2">·</span>
+                    <span className="font-semibold text-gray-700">{currency.symbol}</span>
+                    <span className="text-gray-500 mx-2">·</span>
+                    <span className="text-gray-600 text-sm">{currency.name}</span>
+                  </div>
+                  <button
+                    onClick={() => handleDelete(currency)}
+                    className="w-full py-2 bg-red-500 hover:bg-red-400 text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                  >
+                    Șterge
+                  </button>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
