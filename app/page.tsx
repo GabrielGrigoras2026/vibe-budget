@@ -21,16 +21,10 @@ export default function Home() {
         <p className="text-xl text-white/80 mb-10">
           Aplicație de gestiune financiară personală
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="/register"
-            className="w-full sm:w-auto px-10 py-3.5 bg-white text-teal-600 font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg"
-          >
-            Înregistrează-te
-          </a>
+        <div className="flex items-center justify-center">
           <a
             href="/login"
-            className="w-full sm:w-auto px-10 py-3.5 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg"
+            className="px-10 py-3.5 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg"
           >
             Login
           </a>
