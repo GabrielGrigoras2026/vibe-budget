@@ -287,38 +287,41 @@ export default function TransactionsPage() {
           <h1 className="text-4xl font-bold text-gray-900">💸 Tranzacții</h1>
           <button
             onClick={() => router.push("/dashboard")}
-            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap ml-4"
           >
-            ← Înapoi la Dashboard
+            ← Înapoi
           </button>
         </div>
 
         {/* Filtre */}
         <div className="glass rounded-2xl p-5 mb-6 animate-fade-in delay-1">
-          {/* Rândul 1: buton Adaugă + căutare */}
-          <div className="flex items-center gap-3 mb-4">
+          {/* Rândul 1: butoane acțiuni */}
+          <div className="flex flex-wrap gap-3 mb-3">
             <button
               onClick={openModal}
-              className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg whitespace-nowrap"
+              className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               + Adaugă Tranzacție
             </button>
             <button
               onClick={handleRecategorize}
               disabled={recategorizing}
-              className="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {recategorizing ? "⏳ Se procesează..." : "🔄 Recategorizează"}
             </button>
+          </div>
+          {/* Rândul 2: căutare */}
+          <div className="mb-3">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Caută după descriere..."
-              className="flex-1 px-4 py-2.5 rounded-xl border border-white/40 bg-white/60 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
+              className="w-full px-4 py-2.5 rounded-xl border border-white/40 bg-white/60 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm"
             />
           </div>
-          {/* Rândul 2: filtre date + bancă + categorie */}
+          {/* Rândul 3: filtre date + bancă + categorie */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
               <label className="text-sm text-gray-600 whitespace-nowrap">De la</label>

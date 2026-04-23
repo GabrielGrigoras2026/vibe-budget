@@ -222,25 +222,23 @@ export default function CategoriesPage() {
       {/* Content */}
       <div className="container mx-auto px-4 py-10 max-w-3xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 animate-fade-in">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-1">🏷️ Categorii</h1>
-            <p className="text-gray-700">Gestionează categoriile de venituri și cheltuieli</p>
-          </div>
-          <div className="flex flex-col items-end gap-6">
+        <div className="mb-8 animate-fade-in">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-4xl font-bold text-gray-900">🏷️ Categorii</h1>
             <button
               onClick={() => router.push("/dashboard")}
               className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
             >
-              ← Înapoi la Dashboard
-            </button>
-            <button
-              onClick={() => openAddModal("expense")}
-              className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              + Adaugă categorie
+              ← Înapoi
             </button>
           </div>
+          <p className="text-gray-700 mb-4">Gestionează categoriile de venituri și cheltuieli</p>
+          <button
+            onClick={() => openAddModal("expense")}
+            className="w-full sm:w-auto px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            + Adaugă categorie
+          </button>
         </div>
 
         {/* Venituri */}

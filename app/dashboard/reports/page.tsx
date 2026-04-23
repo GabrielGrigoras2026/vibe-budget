@@ -183,9 +183,9 @@ export default function ReportsPage() {
           <h1 className="text-4xl font-bold text-gray-900">📊 Rapoarte</h1>
           <button
             onClick={() => router.push("/dashboard")}
-            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap ml-4"
           >
-            ← Înapoi la Dashboard
+            ← Înapoi
           </button>
         </div>
 

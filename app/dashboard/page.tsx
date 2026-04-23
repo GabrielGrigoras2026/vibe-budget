@@ -202,32 +202,32 @@ export default function DashboardPage() {
 
         {/* Acces rapid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mb-10 animate-fade-in delay-2">
-          <a href="/dashboard/transactions" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+          <a href="/dashboard/transactions" className="glass glass-hover rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[120px]">
             <p className="text-4xl mb-3">💸</p>
             <p className="font-bold text-gray-900 mb-1">Tranzacții</p>
             <p className="text-sm text-gray-600">Lista completă</p>
           </a>
-          <a href="/dashboard/upload" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+          <a href="/dashboard/upload" className="glass glass-hover rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[120px]">
             <p className="text-4xl mb-3">📤</p>
             <p className="font-bold text-gray-900 mb-1">Upload</p>
             <p className="text-sm text-gray-600">Importă extras bancar</p>
           </a>
-          <a href="/dashboard/banks" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+          <a href="/dashboard/banks" className="glass glass-hover rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[120px]">
             <p className="text-4xl mb-3">🏦</p>
             <p className="font-bold text-gray-900 mb-1">Bănci</p>
             <p className="text-sm text-gray-600">Gestionează băncile tale</p>
           </a>
-          <a href="/dashboard/categories" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+          <a href="/dashboard/categories" className="glass glass-hover rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[120px]">
             <p className="text-4xl mb-3">🏷️</p>
             <p className="font-bold text-gray-900 mb-1">Categorii</p>
             <p className="text-sm text-gray-600">Categorii venituri și cheltuieli</p>
           </a>
-          <a href="/dashboard/currencies" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+          <a href="/dashboard/currencies" className="glass glass-hover rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[120px]">
             <p className="text-4xl mb-3">💱</p>
             <p className="font-bold text-gray-900 mb-1">Valute</p>
             <p className="text-sm text-gray-600">Administrează valutele</p>
           </a>
-          <a href="/dashboard/reports" className="glass glass-hover rounded-2xl p-6 text-center cursor-pointer">
+          <a href="/dashboard/reports" className="glass glass-hover rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[120px]">
             <p className="text-4xl mb-3">📊</p>
             <p className="font-bold text-gray-900 mb-1">Rapoarte</p>
             <p className="text-sm text-gray-600">Grafice și statistici</p>

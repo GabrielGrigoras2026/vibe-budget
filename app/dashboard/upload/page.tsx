@@ -170,12 +170,12 @@ export default function UploadPage() {
       <div className="container mx-auto px-4 py-10 max-w-3xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8 animate-fade-in">
-          <h1 className="text-4xl font-bold text-gray-900">📤 Upload Extras Bancar</h1>
+          <h1 className="text-4xl font-bold text-gray-900">📤 Upload</h1>
           <button
             onClick={() => router.push("/dashboard")}
-            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+            className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap ml-4"
           >
-            ← Înapoi la Dashboard
+            ← Înapoi
           </button>
         </div>
 
