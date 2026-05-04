@@ -21,15 +21,15 @@ const features = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-orange-300 flex items-center justify-center px-4">
       <div className="text-center max-w-3xl w-full">
-        <h1 className="text-5xl font-bold text-gray-900 mb-3">
-          Vibe Budget
+        <h1 className="text-5xl font-bold text-gray-800 mb-3">
+          💰 Vibe Budget
         </h1>
         <p className="text-xl text-gray-700 font-medium mb-2">
           Gestionează-ți bugetul inteligent
         </p>
-        <p className="text-gray-500 mb-10 text-sm max-w-xl mx-auto">
+        <p className="text-gray-600 mb-10 text-sm max-w-xl mx-auto">
           Importă extrase bancare, organizează tranzacțiile pe categorii și vezi
           rapoarte detaliate. În plus primești notificări și sfaturi de
           gestionare eficientă
@@ -39,7 +39,7 @@ export default function Home() {
           {features.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="bg-white rounded-2xl p-6 flex flex-col items-center text-center border border-gray-200 shadow-sm"
+              className="bg-teal-50/80 rounded-2xl p-6 flex flex-col items-center text-center border border-teal-100 shadow-sm"
             >
               <Icon className="w-8 h-8 text-indigo-500 mb-3" />
               <h3 className="font-bold text-gray-800 mb-1">{title}</h3>
@@ -51,13 +51,13 @@ export default function Home() {
         <div className="flex items-center justify-center gap-4">
           <Link
             href="/register"
-            className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+            className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
           >
             Înscrie-te
           </Link>
           <Link
             href="/login"
-            className="px-8 py-3 bg-white hover:bg-gray-50 text-indigo-600 font-semibold rounded-xl transition-all duration-200 hover:scale-105 border border-gray-300"
+            className="px-8 py-3 bg-teal-50/80 hover:bg-teal-50 text-teal-700 font-semibold rounded-xl transition-all duration-200 hover:scale-105 border border-teal-200"
           >
             Am deja cont
           </Link>
