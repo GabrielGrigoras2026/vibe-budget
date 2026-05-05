@@ -8,15 +8,19 @@ export default function ConfirmPage() {
       <div className="absolute bottom-[-60px] right-[-60px] w-80 h-80 rounded-full bg-orange-400/40 blur-3xl" />
 
       <div className="relative z-10 w-full max-w-md glass rounded-2xl p-8 shadow-2xl text-center">
-        <div className="text-5xl mb-4">📬</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-gray-900 mb-3">
           Verifică-ți emailul
         </h1>
-        <p className="text-gray-600 mb-6">
-          Am trimis un link de confirmare la adresa ta. Dă click pe link pentru
-          a activa contul.
+        <p className="text-gray-600 mb-2">
+          Am trimis un link de confirmare la adresa ta.
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-gray-600 mb-6">
+          Deschide emailul pe calculator și dă click pe link pentru a activa contul.
+        </p>
+        <div className="bg-white/50 rounded-xl px-4 py-3 text-sm text-gray-500 mb-6">
+          Linkul este valabil 24 de ore. Dacă nu găsești emailul, verifică și folderul Spam.
+        </div>
+        <p className="text-sm text-gray-600">
           Nu ai primit emailul?{" "}
           <Link
             href="/register"

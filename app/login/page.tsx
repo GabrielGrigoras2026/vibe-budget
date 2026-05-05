@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -10,6 +10,14 @@ export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [urlError, setUrlError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "confirmare-esuata") {
+      setUrlError("Linkul de confirmare a expirat sau este invalid. Înregistrează-te din nou.");
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +60,12 @@ export default function LoginPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">💰 Vibe Budget</h1>
           <p className="text-gray-600">Intră în contul tău</p>
         </div>
+
+        {urlError && (
+          <div className="mb-4 bg-red-50 text-red-600 text-sm rounded-xl px-4 py-3">
+            {urlError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>

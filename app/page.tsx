@@ -1,5 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BarChart3, Lightbulb, CreditCard } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const features = [
   {
@@ -20,6 +25,18 @@ const features = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) setIsLoggedIn(true);
+    };
+    checkSession();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-orange-300 flex items-center justify-center px-4">
       <div className="text-center max-w-3xl w-full">
@@ -41,7 +58,7 @@ export default function Home() {
               key={title}
               className="bg-teal-50/80 rounded-2xl p-6 flex flex-col items-center text-center border border-teal-100 shadow-sm"
             >
-              <Icon className="w-8 h-8 text-indigo-500 mb-3" />
+              <Icon className="w-8 h-8 text-teal-600 mb-3" />
               <h3 className="font-bold text-gray-800 mb-1">{title}</h3>
               <p className="text-gray-500 text-sm">{description}</p>
             </div>
@@ -49,18 +66,29 @@ export default function Home() {
         </div>
 
         <div className="flex items-center justify-center gap-4">
-          <Link
-            href="/register"
-            className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
-          >
-            Înscrie-te
-          </Link>
-          <Link
-            href="/login"
-            className="px-8 py-3 bg-teal-50/80 hover:bg-teal-50 text-teal-700 font-semibold rounded-xl transition-all duration-200 hover:scale-105 border border-teal-200"
-          >
-            Am deja cont
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              href="/dashboard"
+              className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+            >
+              Mergi la dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/register"
+                className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+              >
+                Înscrie-te
+              </Link>
+              <Link
+                href="/login"
+                className="px-8 py-3 bg-teal-50/80 hover:bg-teal-50 text-teal-700 font-semibold rounded-xl transition-all duration-200 hover:scale-105 border border-teal-200"
+              >
+                Am deja cont
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>
